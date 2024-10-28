@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
 
     void Move()
     {
-        Vector3 dir = transform.forward * curMovementInput.y +transform.right * curMovementInput.x;
+        Vector3 dir = transform.forward * curMovementInput.y + transform.right * curMovementInput.x;
         dir *= moveSpeed;
         dir.y = _rigidbody.velocity.y;
 
@@ -84,13 +84,13 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started && isGrounded())
+        if (context.phase == InputActionPhase.Started && IsGrounded())
         {
             _rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
         }
     }
 
-    bool isGrounded()
+    bool IsGrounded()
     {
         Ray[] rays = new Ray[4]
         {
