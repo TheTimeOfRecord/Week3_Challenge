@@ -22,7 +22,11 @@ public class PlayerController : MonoBehaviour
     public bool canLook = true;
 
     public Action onInventoryAction;
+    public Action onMenuAction;
     private Rigidbody _rigidbody;
+
+    bool isInventory = false;
+    bool isMenu = false;
 
     private void Awake()
     {
@@ -116,7 +120,11 @@ public class PlayerController : MonoBehaviour
         if(context.phase == InputActionPhase.Started)
         {
             onInventoryAction?.Invoke();
-            ToggleCursor();
+            if (isMenu == false)
+            {
+                ToggleCursor();
+            }
+            isInventory = !isInventory;
         }
     }
 
@@ -126,4 +134,29 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
         canLook = !toggle;
     }
+
+    public void OnMenu()
+    {
+        onMenuAction?.Invoke();
+        if (isInventory == false)
+        {
+            ToggleCursor();
+        }
+        isMenu = !isMenu;
+    }
+
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        //TODO : 스테미나 적용
+        if (context.phase == InputActionPhase.Started)
+        {
+            moveSpeed *= 2;
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            moveSpeed /= 2;
+        }
+    }
+
+    
 }
