@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IDamagalbe
@@ -12,6 +13,7 @@ public class PlayerCondition : MonoBehaviour, IDamagalbe
     public UICondition uiCondition;
     
     Condition health { get { return uiCondition.health; } }
+    Condition mana { get { return uiCondition.mana; } }
     Condition hunger { get { return uiCondition.hunger; } }
     Condition stamina { get { return uiCondition.stamina; } }
 
@@ -21,15 +23,26 @@ public class PlayerCondition : MonoBehaviour, IDamagalbe
 
     void Update()
     {
-        hunger.Subtract(hunger.passiveValue * Time.deltaTime);
-        stamina.Add(stamina.passiveValue * Time.deltaTime);
+        UpdatePassive();
+    }
 
-        if(hunger.curValue == 0f)
+    public void UpdatePassive()
+    {
+        mana.Add(mana.passiveValue * Time.deltaTime);
+        hunger.Add(hunger.passiveValue * Time.deltaTime);
+        stamina.Add(stamina.passiveValue * Time.deltaTime);
+        
+
+        if (hunger.curValue > hunger.maxValue / 2)
         {
-            health.Subtract(noHungerHealthDecay * Time.deltaTime);
+            health.Add(health.passiveValue * Time.deltaTime);
+        }
+        else if (hunger.curValue == 0f)
+        {
+            health.Add(noHungerHealthDecay * Time.deltaTime);
         }
 
-        if(health.curValue == 0f)
+        if (health.curValue == 0f)
         {
             Die();
         }
@@ -52,7 +65,7 @@ public class PlayerCondition : MonoBehaviour, IDamagalbe
 
     public void TakePysicalDamage(int damage)
     {
-        health.Subtract(damage);
+        health.Add(-damage);
         onTakeDamage?.Invoke();
     }
 }

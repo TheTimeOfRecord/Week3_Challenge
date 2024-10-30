@@ -31,11 +31,7 @@ public class Condition : MonoBehaviour
 
     public void Add(float value)
     {
-        curValue = Mathf.Min(curValue + value, maxValue);
-    }
-
-    public void Subtract(float value)
-    {
-        curValue = Mathf.Max(curValue - value, 0);
+        curValue = curValue + value;
+        curValue = Mathf.Clamp(curValue, 0, maxValue);
     }
 }
